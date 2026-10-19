@@ -363,15 +363,6 @@ footer{background:var(--ground); color:var(--on-ground-muted); padding:28px clam
     <div><p class="k">Sprints 2 to 4</p><h4>Chosen by the regional learning heads</h4><p>Each quarter, from a backlog shaped by what inspirers and team pulses report: needed now, not already covered.</p></div>
   </div>
 
-  <h3>The year, month by month</h3>
-  <p class="h3-sub">A catalogue of four sprints. Leaders join any that interest them, and joining means sharing it at least once. Slide through the year to see what is running.</p>
-  <div class="year">
-    <div class="year-head"><label for="month">Month</label><input type="range" id="month" min="1" max="12" value="5" step="1"><output id="mOut" for="month">M5</output></div>
-    <div class="ygrid-scroll"><div class="ygrid" id="ygrid"></div></div>
-    <div class="legend"><span><i style="background:var(--red)"></i>Light it, with the team pulse before</span><span><i style="background:var(--taupe)"></i>Fuel it, the sprint month</span><span><i style="background:var(--slate)"></i>Spread it, with the team pulse after</span></div>
-    <div class="now" id="now" aria-live="polite"></div>
-  </div>
-
   <h3>Eleven regions, three time zones, one catalogue</h3>
   <p class="h3-sub">Each cluster runs the sprint at one shared midday slot. Choose a cluster to see what that slot means locally (winter time).</p>
   <div class="regions">
@@ -532,33 +523,6 @@ footer{background:var(--ground); color:var(--on-ground-muted); padding:28px clam
     if(act&&getComputedStyle(needle).display!=='none'){needle.style.top=(act.offsetTop+19)+'px'}
   }
   addEventListener('scroll',tick,{passive:true}); addEventListener('resize',tick); tick();
-
-  /* year */
-  var g=document.getElementById('ygrid'), m=document.getElementById('month'), mo=document.getElementById('mOut'), now=document.getElementById('now');
-  var sprints=[['S1','Leading in the age of AI'],['S2','Topic from the catalogue'],['S3','Topic from the catalogue'],['S4','Topic from the catalogue']];
-  function phase(s,mm){var b=s*3+1; if(mm===b) return 'light'; if(mm===b+1) return 'fuel'; if(mm>=b+2) return 'spread'; return null}
-  function build(){
-    var h='<div></div>'; for(var i=1;i<=12;i++) h+='<div class="mh" data-m="'+i+'">M'+i+'</div>';
-    sprints.forEach(function(sp,s){ h+='<div class="rl">'+sp[0]+'<br><span style="font-weight:400;color:var(--muted)">'+sp[1]+'</span></div>';
-      for(var i=1;i<=12;i++){var p=phase(s,i), t={light:'Light',fuel:'Sprint',spread:'Share'}[p]||'';
-                var tail=p==='spread'&&i>s*3+3; h+='<div class="cell '+(p||'')+(tail?' tail':'')+'" data-m="'+i+'">'+(tail?'':t)+'</div>';}
-    });
-    
-    g.innerHTML=h;
-  }
-  function upd(){
-    var v=+m.value; mo.textContent='M'+v;
-    g.querySelectorAll('[data-m]').forEach(function(c){var on=+c.dataset.m===v; if(c.classList.contains('mh')) c.classList.toggle('on',on); else c.classList.toggle('on-col',on)});
-    var out=[];
-    sprints.forEach(function(sp,s){var p=phase(s,v);
-      if(p==='light') out.push('<div><b>'+sp[0]+': Light it</b>Leaders apply or are nominated; regional HR and L&amp;D confirm. Team pulse before.</div>');
-      if(p==='fuel') out.push('<div><b>'+sp[0]+': Fuel it</b>Week by week, five 60-minute lunch sessions in each cluster.</div>');
-      if(p==='spread') out.push('<div><b>'+sp[0]+': Spread it</b>Inspirers share in existing moments'+(v===s*3+3?'; team pulse after.':'.')+'</div>');
-    });
-    
-    now.innerHTML=out.join('');
-  }
-  build(); m.addEventListener('input',upd); upd();
 
   /* clusters */
   var slots={
